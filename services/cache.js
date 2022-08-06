@@ -7,11 +7,25 @@ const exec = mongoose.Query.prototype.exec;
 const client = redis.createClient()
 client.get = util.promisify(client.get)
 
+
+//check what should be cached and what not
+mongoose.Query.prototype.cache = function () {
+    this.useCache = true;
+
+    return this //this make you able to do chain able like .cache().limit().sort().populate() etc
+}
+
+
+
 mongoose.Query.prototype.exec = async function () {
 
-    // console.log("I am ran before the actual query executed")
-    // console.log(this.getQuery());
-    // console.log(this.mongooseCollection.name);
+    if (!this.useCache) {
+        console.log("is applied");
+
+        return exec.apply(this, arguments)
+    }
+
+
 
     const key = JSON.stringify(Object.assign({}, this.getQuery(), { collection: this.mongooseCollection.name }))
 
@@ -28,20 +42,19 @@ mongoose.Query.prototype.exec = async function () {
         console.log("Value From Cache");
 
         //solution
-        Array.isArray(doc)
+        return Array.isArray(doc)
             ?
             doc.map(d => new this.model(d))
             :
             new this.model(doc)
-
-
     }
     // if not then issue the mongo query and store the data in redis
     const result = await exec.apply(this, arguments)
-    // console.log("Result ===>", result);
+    console.log("Result ===>", result);
 
     client.set(key, JSON.stringify(result))
 
     return result
+
 }
 
