@@ -27,7 +27,7 @@ test("Login In", async () => {
 
 
 //Session 
-test("Seesion create", async () => {
+test.only("Seesion create, Check for the logout button apears", async () => {
     const id = '62eeb7362ecb53e817d7c273';
     const sessionObject = {
         passport: {
@@ -44,10 +44,11 @@ test("Seesion create", async () => {
     const keygrip = new Keygrip([keys.cookieKey])
     const sig = keygrip.sign('session=' + sessionString)
 
-    console.log("Key Grip ==>", sig);
-    console.log("Session ==>", sessionString);
+    await page.setCookie({ name: 'session', value: sessionString }, { name: 'session.sig', value: sig })
+    // console.log("Key Grip ==>", sig);
+    // console.log("Session ==>", sessionString);
 
-    await browser.close()
+    await page.goto('http://localhost:3000')
 
 
 })
