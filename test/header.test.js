@@ -48,7 +48,14 @@ test.only("Seesion create, Check for the logout button apears", async () => {
     // console.log("Key Grip ==>", sig);
     // console.log("Session ==>", sessionString);
 
+
     await page.goto('http://localhost:3000')
+    await page.waitForSelector('a[href="/auth/logout"]')
+
+
+    const logoutText = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
+
+    expect(logoutText).toEqual('Logout')
 
 
 })
