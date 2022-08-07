@@ -6,7 +6,7 @@ const keygrip = new Keygrip([keys.cookieKey])
 
 module.exports = (user) => {
 
-    console.log(user);
+    // console.log(user);
 
     const sessionData = {
         passport: {

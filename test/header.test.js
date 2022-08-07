@@ -37,8 +37,6 @@ test.only("Seesion create, Check for the logout button apears", async () => {
     const user = await userFactory()
     const { session, sig } = sessionFactory(user)
 
-    // expect(session).toEqual('eyJwYXNzcG9ydCI6eyJ1c2VyIjoiNjJmMDE5MTRlZDFmOTg0NjY2Yzg2NjA4In19')
-
     await page.setCookie({ name: 'session', value: session })
     await page.setCookie({ name: 'session.sig', value: sig })
 
