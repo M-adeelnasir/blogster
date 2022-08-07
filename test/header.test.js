@@ -7,15 +7,24 @@ beforeEach(async () => {
     await page.goto('http://localhost:3000');
 })
 
-beforeAfter(() => {
+afterEach(async () => {
     await browser.close()
 })
 
 test("Header Test", async () => {
 
     const text = await page.$eval('a.left.brand-logo', el => el.innerHTML)
-
     expect(text).toEqual("Blogster")
 
 })
 
+test("Login In", async () => {
+
+    await page.click('.right a')
+
+    const url = await page.url()
+
+    expect(url).toMatch('/accounts\.google\.com/')
+
+
+})
