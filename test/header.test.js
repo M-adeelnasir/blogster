@@ -29,20 +29,7 @@ test("Login In", async () => {
 //Session 
 test.only("Seesion create, Check for the logout button apears", async () => {
     const id = '62eeb7362ecb53e817d7c273';
-    const sessionObject = {
-        passport: {
-            user: id
-        }
-    }
 
-    const Buffer = require('safe-buffer').Buffer
-    const sessionString = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
-
-    const Keygrip = require('keygrip');
-    const keys = require('../config/keys');
-
-    const keygrip = new Keygrip([keys.cookieKey])
-    const sig = keygrip.sign('session=' + sessionString)
 
     await page.setCookie({ name: 'session', value: sessionString }, { name: 'session.sig', value: sig })
     // console.log("Key Grip ==>", sig);
