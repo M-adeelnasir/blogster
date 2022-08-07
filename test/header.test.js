@@ -1,8 +1,14 @@
 const puppeteer = require('puppeteer');
+const sessionFactory = require('./factories/sessionFactory');
+const userFactory = require('./factories/userFactory')
 
 let browser, page;
 beforeEach(async () => {
-    browser = await puppeteer.launch({ headless: false });
+    browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: null,
+        args: ['--start-maximized']
+    });
     page = await browser.newPage();
     await page.goto('http://localhost:3000');
 })
@@ -28,13 +34,13 @@ test("Login In", async () => {
 
 //Session 
 test.only("Seesion create, Check for the logout button apears", async () => {
-    const id = '62eeb7362ecb53e817d7c273';
+    const user = await userFactory()
+    const { session, sig } = sessionFactory(user)
 
+    // expect(session).toEqual('eyJwYXNzcG9ydCI6eyJ1c2VyIjoiNjJmMDE5MTRlZDFmOTg0NjY2Yzg2NjA4In19')
 
-    await page.setCookie({ name: 'session', value: sessionString }, { name: 'session.sig', value: sig })
-    // console.log("Key Grip ==>", sig);
-    // console.log("Session ==>", sessionString);
-
+    await page.setCookie({ name: 'session', value: session })
+    await page.setCookie({ name: 'session.sig', value: sig })
 
     await page.goto('http://localhost:3000')
     await page.waitForSelector('a[href="/auth/logout"]')

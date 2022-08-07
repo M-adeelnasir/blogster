@@ -6,13 +6,17 @@ const keygrip = new Keygrip([keys.cookieKey])
 
 module.exports = (user) => {
 
-    const session = {
+    console.log(user);
+
+    const sessionData = {
         passport: {
             user: user._id.toString()
         }
     }
-    const sessionString = Buffer.from(JSON.stringify(session)).toString('base64')
-    const sig = keygrip.sign('session=' + sessionString)
+    const session = Buffer.from(JSON.stringify(sessionData)).toString('base64')
+    const sig = keygrip.sign('session=' + session)
+
+    // console.log(session, sig);
 
     return { session, sig }
 
