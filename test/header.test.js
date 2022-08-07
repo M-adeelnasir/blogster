@@ -7,9 +7,9 @@ beforeEach(async () => {
     await page.goto('http://localhost:3000');
 })
 
-afterEach(async () => {
-    await browser.close()
-})
+// afterEach(async () => {
+//     await browser.close()
+// })
 
 test("Header Test", async () => {
 
@@ -19,12 +19,35 @@ test("Header Test", async () => {
 })
 
 test("Login In", async () => {
-
     await page.click('.right a')
-
     const url = await page.url()
-
     expect(url).toMatch('/accounts\.google\.com/')
+})
+
+
+
+//Session 
+test("Seesion create", async () => {
+    const id = '62eeb7362ecb53e817d7c273';
+    const sessionObject = {
+        passport: {
+            user: id
+        }
+    }
+
+    const Buffer = require('safe-buffer').Buffer
+    const sessionString = Buffer.from(JSON.stringify(sessionObject)).toString('base64')
+
+    const Keygrip = require('keygrip');
+    const keys = require('../config/keys');
+
+    const keygrip = new Keygrip([keys.cookieKey])
+    const sig = keygrip.sign('session=' + sessionString)
+
+    console.log("Key Grip ==>", sig);
+    console.log("Session ==>", sessionString);
+
+    await browser.close()
 
 
 })
