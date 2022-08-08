@@ -33,7 +33,23 @@ test("Login In", async () => {
 
 
 //Session 
-test.only("Seesion create, Check for the logout button apears", async () => {
+test("Seesion create, Check for the logout button apears", async () => {
+    const user = await userFactory()
+    const { session, sig } = sessionFactory(user)
+
+    await page.setCookie({ name: 'session', value: session })
+    await page.setCookie({ name: 'session.sig', value: sig })
+
+    await page.goto('http://localhost:3000')
+    await page.waitForSelector('a[href="/auth/logout"]')
+    const logoutText = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
+
+    expect(logoutText).toEqual('Logout')
+
+
+})
+
+test.only("See the blog create form", async () => {
     const user = await userFactory()
     const { session, sig } = sessionFactory(user)
 
@@ -43,10 +59,11 @@ test.only("Seesion create, Check for the logout button apears", async () => {
     await page.goto('http://localhost:3000')
     await page.waitForSelector('a[href="/auth/logout"]')
 
-
-    const logoutText = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
-
-    expect(logoutText).toEqual('Logout')
+    await page.click('.right a')
+    await page.waitForSelector('.btn-floating.btn-large.red')
+    await page.click('.btn-floating.btn-large.red')
+    const blogTilte = await page.$eval('.title label', el => el.innerHTML)
+    expect(blogTilte).toEqual('Blog Title')
 
 
 })
