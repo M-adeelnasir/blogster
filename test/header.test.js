@@ -14,41 +14,41 @@ beforeEach(async () => {
     await page.goto('http://localhost:3000');
 })
 
-// afterEach(async () => {
-//     await browser.close()
-// })
+afterEach(async () => {
+    await browser.close()
+})
 
-// test("Header Test", async () => {
+test("Header Test", async () => {
 
-//     const text = await page.$eval('a.left.brand-logo', el => el.innerHTML)
-//     expect(text).toEqual("Blogster")
+    const text = await page.$eval('a.left.brand-logo', el => el.innerHTML)
+    expect(text).toEqual("Blogster")
 
-// })
+})
 
-// test("Login In", async () => {
-//     await page.click('.right a')
-//     const url = await page.url()
-//     expect(url).toMatch('/accounts\.google\.com/')
-// })
+test("Login In", async () => {
+    await page.click('.right a')
+    const url = await page.url()
+    expect(url).toMatch('/accounts\.google\.com/')
+})
 
 
 
 //Session 
-// test("Seesion create, Check for the logout button apears", async () => {
-//     const user = await userFactory()
-//     const { session, sig } = sessionFactory(user)
+test("Seesion create, Check for the logout button apears", async () => {
+    const user = await userFactory()
+    const { session, sig } = sessionFactory(user)
 
-//     await page.setCookie({ name: 'session', value: session })
-//     await page.setCookie({ name: 'session.sig', value: sig })
+    await page.setCookie({ name: 'session', value: session })
+    await page.setCookie({ name: 'session.sig', value: sig })
 
-//     await page.goto('http://localhost:3000')
-//     await page.waitForSelector('a[href="/auth/logout"]')
-//     const logoutText = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
+    await page.goto('http://localhost:3000')
+    await page.waitForSelector('a[href="/auth/logout"]')
+    const logoutText = await page.$eval('a[href="/auth/logout"]', el => el.innerHTML)
 
-//     expect(logoutText).toEqual('Logout')
+    expect(logoutText).toEqual('Logout')
 
 
-// })
+})
 
 
 
@@ -90,20 +90,29 @@ describe("When logged in", () => {
     })
 
     describe("Form Submit", () => {
+
         beforeEach(async () => {
             await page.waitForSelector('.btn-floating.btn-large.red')
             await page.click('.btn-floating.btn-large.red')
+            await page.type('.title input', "Test input text for field on", { delay: 20 })
+            await page.type('.content input', "Test input text for field on", { delay: 20 })
+            await page.click('.teal.btn-flat.right.white-text')
         })
 
         test("Fill the input Fields", async () => {
-            await page.type('.title input', "Test input text for field on", { delay: 20 })
-            await page.type('.content input', "Test input text for field on", { delay: 20 })
-
-            await page.click('.teal.btn-flat.right.white-text')
             await page.waitForSelector('h5')
             const confirmation = await page.$eval('h5', el => el.innerHTML)
             expect(confirmation).toEqual('Please confirm your entries')
 
         })
+
+        test("Save blog", async () => {
+            await page.waitForSelector('.green.btn-flat.right.white-text')
+            await page.click('.green.btn-flat.right.white-text')
+            await page.waitForSelector('.card.darken-1.horizontal')
+        })
+
     })
 })
+
+
