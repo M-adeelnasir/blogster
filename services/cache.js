@@ -2,7 +2,10 @@ const mongoose = require('mongoose');
 const redis = require('redis');
 const util = require('util');
 
+
+
 const exec = mongoose.Query.prototype.exec;
+
 
 const client = redis.createClient()
 client.get = util.promisify(client.get)
@@ -20,7 +23,6 @@ mongoose.Query.prototype.cache = function () {
 mongoose.Query.prototype.exec = async function () {
 
     if (!this.useCache) {
-        console.log("is applied");
 
         return exec.apply(this, arguments)
     }
