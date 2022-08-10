@@ -115,4 +115,30 @@ describe("When logged in", () => {
         })
 
     })
+
+
+})
+
+
+describe("Handle api request", () => {
+    test("not logged in User cannot create blog post", async () => {
+        const result = await page.evaluate(() => {
+            return fetch('/api/blogs', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(
+                    {
+                        title: "My New Post",
+                        content: 'hello world ts is the sd'
+                    }
+                )
+            }).then(res => res.json()).catch(err => console.log(err))
+        })
+        expect(result.error).toEqual("You must log in!")
+
+    })
+
 })
