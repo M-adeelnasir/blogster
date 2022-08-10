@@ -110,9 +110,9 @@ describe("When logged in", () => {
             await page.waitForSelector('.green.btn-flat.right.white-text')
             await page.click('.green.btn-flat.right.white-text')
             await page.waitForSelector('.card.darken-1.horizontal')
+            const confirm = await page.$eval('p', el => el.innerHTML)
+            expect(confirm).toEqual("Test input text for field on")
         })
 
     })
 })
-
-
